@@ -1,0 +1,18 @@
+{
+  "beanInfoList":[
+    {
+       "name":"log",
+       "clsName":"cn.com.tuling.dynaproxy.service.impl.LogServiceImpl"
+    },
+    {
+       "name":"powerService",
+       "clsName":"cn.com.tuling.dynaproxy.service.impl.PowerServiceImpl",
+       "adviceName":"log",
+       "adviceMethod":"log"
+    },
+    {
+       "name":"powerService2",
+       "clsName":"cn.com.tuling.dynaproxy.service.impl.PowerServiceVersion2Impl"
+    }
+  ]
+}

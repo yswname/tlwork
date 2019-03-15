@@ -1,0 +1,113 @@
+AOP是怎么实现的呢？
+
+带目标去研究！
+  猜想   -》  求证
+  
+研究内部原理
+1 @EnableAspectJAutoProxy里面的玄机（AOP）
+   proxyTargetClass false，有IOC自己判断决定使用JDK CGLIB
+                    true：使用CGLIB
+                    为什么？代码怎么实现？
+                    
+                    异步，使用代理对象注入
+                    
+@Import(AspectJAutoProxyRegistrar.class)
+--》AnnotationAwareAspectJAutoProxyCreator
+  静态分析
+  动态分析
+2 IOC容器怎么样利用这些玄机（AOP）
+
+怎么玩AOP？
+  1）AnnotationAwareAspectJAutoProxyCreator创建对象（准备）
+  2）在哪里，怎么调用Creator的哪个方法（代码），实现AOP
+  
+  
+ 对象的初始化（包括AOP的处理），都是在IOC容器初始化的时候，完成的
+ 
+AnnotationConfigApplicationContext
+ 		this();//初始化配置信息读取器
+		register(annotatedClasses);//注册配置信息
+		refresh();//对象的处理
+		
+            // 初始化
+			prepareRefresh();
+
+			// 初始化BeanFactory对象（基本IOC对象）
+			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+			// Prepare the bean factory for use in this context.
+			prepareBeanFactory(beanFactory);
+
+			try {
+				// Allows post-processing of the bean factory in context subclasses.
+				postProcessBeanFactory(beanFactory);
+
+				// Invoke factory processors registered as beans in the context.
+				invokeBeanFactoryPostProcessors(beanFactory);
+
+				// 完成AutoProxyCreator对象的实例化和注册
+				registerBeanPostProcessors(beanFactory);
+
+				// Initialize message source for this context.
+				initMessageSource();
+
+				// Initialize event multicaster for this context.
+				initApplicationEventMulticaster();
+
+				// Initialize other special beans in specific context subclasses.
+				onRefresh();
+
+				// Check for listener beans and register them.
+				registerListeners();
+
+				// 实例化对象（AOP处理）
+				finishBeanFactoryInitialization(beanFactory);
+
+				// Last step: publish corresponding event.
+				finishRefresh();
+  
+  
+  org.springframework.aop.config.internalAutoProxyCreator -》类信息
+  反射instance-》beanFactory
+  
+  PostProcessorRegistrationDelegate.registerBeanPostProcessors(ConfigurableListableBeanFactory, AbstractApplicationContext) line: 194	
+  -》BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+    registerBeanPostProcessors(beanFactory, orderedPostProcessors);IOC容器启动的时候，自动实例化和注册了AopCreator
+    
+    
+AOP过程
+ AnnotationConfigApplicationContext(AbstractApplicationContext).finishBeanFactoryInitialization(ConfigurableListableBeanFactory) line: 869	
+  -》beanFactory.preInstantiateSingletons();
+     org.springframework.aop.config.internalAutoProxyCreator对象的使用
+     DefaultListableBeanFactory.preInstantiateSingletons() line: 760	
+       ->getBean()->doGetBean()
+          Object sharedInstance = getSingleton(beanName);//获取到了前面注册过程中注册的bean
+          
+DefaultListableBeanFactory(AbstractAutowireCapableBeanFactory).applyBeanPostProcessorsAfterInitialization(Object, String) line: 435	
+  -》AnnotationAwareAspectJAutoProxyCreator(AbstractAutoProxyCreator).wrapIfNecessary(Object, String, Object) line: 355
+    Object proxy = createProxy(
+					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+	 AnnotationAwareAspectJAutoProxyCreator(AbstractAutoProxyCreator).createProxy(Class<?>, String, Object[], TargetSource) line: 473	
+	   return proxyFactory.getProxy(getProxyClassLoader());
+	   -》ProxyFactory.getProxy(ClassLoader) line: 110	
+	      return createAopProxy().getProxy(classLoader);
+	      -》ProxyFactory(ProxyCreatorSupport).createAopProxy() line: 105	
+	         return getAopProxyFactory().createAopProxy(this);	
+	            -》DefaultAopProxyFactory.createAopProxy(AdvisedSupport) line: 51
+	               // 结合决定使用JDK还是CGLIB
+	               if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
+	                 if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {	
+	                 
+	                 JdkDynamicAopProxy|ObjenesisCglibAopProxy
+	                 
+	                 
+带目标，条件debug（猜想、验证）
+	            
+
+  
+  
+  
+  
+  
+                    
+                    

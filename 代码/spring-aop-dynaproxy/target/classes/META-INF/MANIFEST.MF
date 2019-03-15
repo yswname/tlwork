@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-aop-dynaproxy
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Noble Yang
+Implementation-Vendor-Id: cn.com.tuling.openclass
+Build-Jdk: 1.8.0_45
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/spring-aop-dynaproxy
+Created-By: Maven Integration for Eclipse
+

@@ -1,0 +1,16 @@
+#server.port=9090
+server:
+  port: 9090
+
+spring:
+  application:
+    name: Spring-AOP-Web
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+system:
+  config:
+    pluginFile: d:/work/config/config.json
+    verifyCode: abcd
