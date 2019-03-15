@@ -1,0 +1,21 @@
+
+AOP为Aspect Oriented Programming
+通过预编译方式和运行期动态代理实现程序功能的统一维护的一种技术（思想）
+利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率
+
+歌手李宇春
+参赛的时候，主办方打电话，亲自接（）
+现在呢，还是以前那帮主办方人员，还能打电话，亲自接吗
+自己找形象店，随意通知，随喊随到？
+经纪人
+
+默认规则：
+   自己判断是否有面向接口编程，有-》jdk，无-》CGLIB
+指定使用CGLIB
+  @EnableAspectJAutoProxy(proxyTargetClass=true)
+  <aop:aspectj-autoproxy  poxy-target-class="true"/>
+
+CGLib底层采用ASM字节码生成框架，使用字节码技术生成代理类，比使用Java反射效率要高
+（注意：CGLib不能对声明为final的方法进行代理，因为CGLib原理是动态生成被代理类的子类）
+据参考消息，执行1W次，JDK7及8的动态代理性能比CGlib要好20%左右
+

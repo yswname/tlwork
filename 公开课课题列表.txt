@@ -1,0 +1,19 @@
+玩转Spring注解，化腐朽为神奇
+秒杀SpringBean的生命周期和原理
+BeanPostProcessor原理和使用
+SpringAOP实现和原理分析
+深入探讨Spring拦截链和链式通知调用
+Spring声明式事务实现原理
+Spring扩展原理
+   BeanFactoryPostProcessor
+   BeanDefinitionRegistryPostProcessor
+   ApplicationListener
+   @EventListener和SmartIntializingSingleton
+Spring原理源码解读
+   BeanFactory的初始化
+   执行BeanFactoryPostProcessor
+   注册BeanPostProcessor
+   初始化MessageSource
+   初始化事件监听器和派发器
+   实例化Bean
+
